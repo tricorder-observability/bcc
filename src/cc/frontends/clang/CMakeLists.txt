@@ -10,3 +10,4 @@ if(DEFINED BCC_BACKUP_COMPILE)
 endif()
 
 add_library(clang_frontend STATIC loader.cc b_frontend_action.cc tp_frontend_action.cc kbuild_helper.cc ../../common.cc)
+install(TARGETS clang_frontend ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
