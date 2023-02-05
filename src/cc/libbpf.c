@@ -1132,7 +1132,7 @@ static int create_probe_event(char *buf, const char *ev_name,
     return -1;
   }
 
-  res = snprintf(ev_alias, sizeof(ev_alias), "%s_bcc_%d", ev_name, getpid());
+  res = snprintf(ev_alias, sizeof(ev_alias), "%s__tricorder__%d", ev_name, getpid());
   if (res < 0 || res >= sizeof(ev_alias)) {
     fprintf(stderr, "Event name (%s) is too long for buffer\n", ev_name);
     close(kfd);
@@ -1279,7 +1279,7 @@ static int bpf_detach_probe(const char *ev_name, const char *event_type)
   /*
    * For [k,u]probe created with perf_event_open (on newer kernel), it is
    * not necessary to clean it up in [k,u]probe_events. We first look up
-   * the %s_bcc_%d line in [k,u]probe_events. If the event is not found,
+   * the %s__tricorder__%d line in [k,u]probe_events. If the event is not found,
    * it is safe to skip the cleaning up process (write -:... to the file).
    */
   snprintf(buf, sizeof(buf), "%s/%s_events", get_tracefs_path(), event_type);
@@ -1289,7 +1289,7 @@ static int bpf_detach_probe(const char *ev_name, const char *event_type)
     goto error;
   }
 
-  res = snprintf(buf, sizeof(buf), "%ss/%s_bcc_%d", event_type, ev_name, getpid());
+  res = snprintf(buf, sizeof(buf), "%ss/%s__tricorder__%d", event_type, ev_name, getpid());
   if (res < 0 || res >= sizeof(buf)) {
     fprintf(stderr, "snprintf(%s): %d\n", ev_name, res);
     goto error;
@@ -1314,7 +1314,7 @@ static int bpf_detach_probe(const char *ev_name, const char *event_type)
     goto error;
   }
 
-  res = snprintf(buf, sizeof(buf), "-:%ss/%s_bcc_%d", event_type, ev_name, getpid());
+  res = snprintf(buf, sizeof(buf), "-:%ss/%s__tricorder__%d", event_type, ev_name, getpid());
   if (res < 0 || res >= sizeof(buf)) {
     fprintf(stderr, "snprintf(%s): %d\n", ev_name, res);
     goto error;
